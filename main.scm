@@ -31,7 +31,7 @@
 (define display=
   (lambda (maxr)
     (display "=")
-    (if (> maxr 0) (display= (- maxr 1)))))
+    (if (> maxr 1) (display= (- maxr 1)))))
 
 (define display-header
   (lambda (title)
