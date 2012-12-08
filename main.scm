@@ -16,15 +16,16 @@
     (define process-token (lambda (tokens remaining)
                      (map (lambda (word)
                             (if (string=? word remaining)
-                                      (return (append tokens (list word))))
+                              (call-with-current-continuation
+                                (lambda (cc) (return (cons (append tokens (list word)) cc)))))
                             (if (string-prefix? word remaining)
                                     (process-token (append tokens (list word))
                                              (substring remaining (string-length word) (string-length remaining))))
                             )
                           word-list)))
     (process-token (list) token)
-    ;; Catch the case where we don't find anything return an empty list
-    '()
+    ;; Stub out the values our continuation passes back
+    (cons '() '())
     ))
 
 
@@ -33,9 +34,14 @@
   (lambda (argv)
     (map
       (lambda (token)
+        (let* ((_tmp (call-with-current-continuation (lambda (cc) (find-matches token cc))))
+               (match (car _tmp))
+               (progress (cdr _tmp)))
         (display (string-intersperse
-                   (call-with-current-continuation (lambda (cc) (find-matches token cc)))
+                   match
                    "|"
                    ))
-        (display "\n"))
+        (display "\n")
+        (if (procedure? progress) (progress (list)))
+        ))
         argv)))
