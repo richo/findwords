@@ -15,12 +15,12 @@
   (lambda (token return)
     (define process-token (lambda (tokens remaining)
                      (map (lambda (word)
-                            (if (string=? word remaining)
-                              (call-with-current-continuation
-                                (lambda (cc) (return (cons (append tokens (list word)) cc)))))
-                            (if (string-prefix? word remaining)
+                            (cond ((string=? word remaining)
+                                    (call-with-current-continuation
+                                    (lambda (cc) (return (cons (append tokens (list word)) cc)))))
+                                  ((string-prefix? word remaining)
                                     (process-token (append tokens (list word))
-                                             (substring remaining (string-length word) (string-length remaining))))
+                                             (substring remaining (string-length word) (string-length remaining)))))
                             )
                           word-list)))
     (process-token (list) token)
