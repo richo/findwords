@@ -28,12 +28,24 @@
     (cons '() '())
     ))
 
+(define display=
+  (lambda (maxr)
+    (display "=")
+    (if (> maxr 0) (display= (- maxr 1)))))
+
+(define display-header
+  (lambda (title)
+    (display (string-upcase title))
+    (newline)
+    (display= (string-length title))
+    (newline)))
 
 
 (define main
   (lambda (argv)
     (map
       (lambda (token)
+        (display-header token)
         (let* ((_tmp (call-with-current-continuation (lambda (cc) (find-matches token cc))))
                (match (car _tmp))
                (progress (cdr _tmp)))
@@ -41,7 +53,7 @@
                    match
                    "|"
                    ))
-        (display "\n")
+        (newline)
         (if (procedure? progress) (progress (list)))
         ))
         argv)))
