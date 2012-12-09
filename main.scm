@@ -66,6 +66,7 @@
   (lambda (argv)
     (map
       (lambda (token)
+        (time
         (display-header token)
         (let* ((_tmp (call-with-current-continuation (lambda (cc) (find-matches token cc))))
                (match (car _tmp))
@@ -77,4 +78,5 @@
         (newline)
         (if (procedure? progress) (progress (list)))
         ))
+        )
         argv)))
