@@ -61,22 +61,32 @@
     (display= (string-length title))
     (newline)))
 
+(define handle-token
+  (lambda (token)
+    (time
+    (display-header token)
+    (let* ((_tmp (call-with-current-continuation (lambda (cc) (find-matches token cc))))
+           (match (car _tmp))
+           (progress (cdr _tmp)))
+    (display (string-intersperse
+               match
+               "|"
+               ))
+    (newline)
+    (if (procedure? progress) (progress (list)))
+    ))
+    )
+  )
 
 (define main
   (lambda (argv)
-    (map
-      (lambda (token)
-        (time
-        (display-header token)
-        (let* ((_tmp (call-with-current-continuation (lambda (cc) (find-matches token cc))))
-               (match (car _tmp))
-               (progress (cdr _tmp)))
-        (display (string-intersperse
-                   match
-                   "|"
-                   ))
-        (newline)
-        (if (procedure? progress) (progress (list)))
-        ))
-        )
-        argv)))
+    (if (> (length argv) 0)
+      (map handle-token argv))
+      (begin
+        (display "findwords initialized\n")
+        (define mainloop
+          (lambda ()
+            (handle-token (read-line))
+            (mainloop)
+            ))
+          (mainloop))))
