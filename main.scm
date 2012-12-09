@@ -81,12 +81,11 @@
 (define main
   (lambda (argv)
     (if (> (length argv) 0)
-      (map handle-token argv))
+      (map handle-token argv)
       (begin
         (display "findwords initialized\n")
-        (define mainloop
-          (lambda ()
+        (let mainloop ()
             (handle-token (read-line))
             (mainloop)
-            ))
-          (mainloop))))
+            )
+          (mainloop)))))
