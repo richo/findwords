@@ -14,7 +14,7 @@
 (define word-list
   (with-input-from-file word-list-file
     (lambda () (port-fold (lambda (line hash)
-                            (let* ((first-two (substring line 0 2)))
+                            (let* ((first-two (substring line 0 hash-table-depth)))
                               (if (hash-table-exists? hash first-two)
                                   (hash-table-set! hash first-two (append (hash-table-ref hash first-two) (list line)))
                                   (hash-table-set! hash first-two (list line))))
@@ -25,9 +25,9 @@
 (define words-for-prefix
   (lambda (prefix)
     ; (display (string-append "Looking up words for " prefix "\n"))
-    (if (< (string-length prefix) 2)
+    (if (< (string-length prefix) hash-table-depth)
       (list)
-      (let ((prefix-two (substring prefix 0 2)))
+      (let ((prefix-two (substring prefix 0 hash-table-depth)))
         (if (hash-table-exists? word-list prefix-two)
             (hash-table-ref word-list prefix-two)
             (list)))))) ; Kludge to deal with nonexistant keys simply
