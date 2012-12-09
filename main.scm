@@ -28,9 +28,7 @@
     (if (< (string-length prefix) hash-table-depth)
       (list)
       (let ((prefix-two (substring prefix 0 hash-table-depth)))
-        (if (hash-table-exists? word-list prefix-two)
-            (hash-table-ref word-list prefix-two)
-            (list)))))) ; Kludge to deal with nonexistant keys simply
+        (hash-table-ref/default word-list prefix-two (list))))))
 
 (define find-matches
   (lambda (token return)
