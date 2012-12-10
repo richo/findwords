@@ -11,14 +11,16 @@
     (cond (environment-file environment-file)
           (else "/usr/share/dict/words"))))
 ; Read all words into memory
+(display "Hash table generation\n")
 (define word-list
+  (time
   (with-input-from-file word-list-file
     (lambda () (port-fold (lambda (line hash)
                             (let* ((first-two (substring line 0 hash-table-depth)))
                               (hash-table-set! hash first-two (append (hash-table-ref/default hash first-two (list)) (list line))))
                             hash)
                           (make-hash-table)
-                          read-line))))
+                          read-line)))))
 
 (define words-for-prefix
   (lambda (prefix)
