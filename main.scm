@@ -68,9 +68,9 @@
                match
                "|"
                ))
-    (newline)
-    (if (procedure? progress) (progress (list)))
+    (cond ((procedure? progress) (newline) (progress (list))))
     ))
+    (newline)
     )
   )
 
