@@ -32,20 +32,18 @@
 
 (define find-matches
   (lambda (token return)
-    (define process-token (lambda (tokens remaining)
+    (letrec ((process-token (lambda (tokens remaining)
                      (map (lambda (word)
                             (cond ((string=? word remaining)
                                     (call-with-current-continuation
                                     (lambda (cc) (return (cons (append tokens (list word)) cc)))))
                                   ((string-prefix? word remaining)
                                     (process-token (append tokens (list word))
-                                             (substring remaining (string-length word) (string-length remaining)))))
-                            )
-                          (words-for-prefix remaining))))
+                                             (substring remaining (string-length word) (string-length remaining))))))
+                          (words-for-prefix remaining)))))
     (process-token (list) token)
     ;; Stub out the values our continuation passes back
-    (cons '() '())
-    ))
+    (cons '() '()))))
 
 (define display=
   (lambda (maxr)
