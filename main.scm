@@ -66,15 +66,9 @@
     (let* ((_tmp (call-with-current-continuation (lambda (cc) (find-matches token cc))))
            (match (car _tmp))
            (progress (cdr _tmp)))
-    (display (string-intersperse
-               match
-               "|"
-               ))
-    (cond ((procedure? progress) (newline) (progress (list))))
-    ))
-    (newline)
-    )
-  )
+    (display (string-intersperse match "|"))
+    (cond ((procedure? progress) (newline) (progress (list))))))
+    (newline)))
 
 (define main
   (lambda (argv)
@@ -84,6 +78,5 @@
         (display "findwords initialized\n")
         (let mainloop ()
             (handle-token (read-line))
-            (mainloop)
-            )
+            (mainloop))
           (mainloop)))))
